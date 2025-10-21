@@ -1,0 +1,384 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Databases for each service
+  user-db:
+    image: postgres:15-alpine
+    container_name: steam-user-db
+    environment:
+      POSTGRES_DB: user_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d user_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  game-catalog-db:
+    image: postgres:15-alpine
+    container_name: steam-game-catalog-db
+    environment:
+      POSTGRES_DB: game_catalog_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - game_catalog_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-game-catalog.sql:/docker-entrypoint-initdb.d/init-game-catalog.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d game_catalog_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  review-db:
+    image: postgres:15-alpine
+    container_name: steam-review-db
+    environment:
+      POSTGRES_DB: review_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - review_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-review.sql:/docker-entrypoint-initdb.d/init-review.sql
+    ports:
+      - "5434:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d review_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  shopping-db:
+    image: postgres:15-alpine
+    container_name: steam-shopping-db
+    environment:
+      POSTGRES_DB: shopping_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - shopping_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-shopping.sql:/docker-entrypoint-initdb.d/init-shopping.sql
+    ports:
+      - "5435:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d shopping_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  purchase-db:
+    image: postgres:15-alpine
+    container_name: steam-purchase-db
+    environment:
+      POSTGRES_DB: purchase_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - purchase_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-purchase.sql:/docker-entrypoint-initdb.d/init-purchase.sql
+    ports:
+      - "5436:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d purchase_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  payment-db:
+    image: postgres:15-alpine
+    container_name: steam-payment-db
+    environment:
+      POSTGRES_DB: payment_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-payment.sql:/docker-entrypoint-initdb.d/init-payment.sql
+    ports:
+      - "5437:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d payment_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  online-db:
+    image: postgres:15-alpine
+    container_name: steam-online-db
+    environment:
+      POSTGRES_DB: online_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - online_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-online.sql:/docker-entrypoint-initdb.d/init-online.sql
+    ports:
+      - "5438:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d online_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  social-db:
+    image: postgres:15-alpine
+    container_name: steam-social-db
+    environment:
+      POSTGRES_DB: social_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - social_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-social.sql:/docker-entrypoint-initdb.d/init-social.sql
+    ports:
+      - "5439:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d social_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  notification-db:
+    image: postgres:15-alpine
+    container_name: steam-notification-db
+    environment:
+      POSTGRES_DB: notification_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - notification_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-notification.sql:/docker-entrypoint-initdb.d/init-notification.sql
+    ports:
+      - "5440:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d notification_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  recommendation-db:
+    image: postgres:15-alpine
+    container_name: steam-recommendation-db
+    environment:
+      POSTGRES_DB: recommendation_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - recommendation_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-recommendation.sql:/docker-entrypoint-initdb.d/init-recommendation.sql
+    ports:
+      - "5441:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d recommendation_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  achievement-db:
+    image: postgres:15-alpine
+    container_name: steam-achievement-db
+    environment:
+      POSTGRES_DB: achievement_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - achievement_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-achievement.sql:/docker-entrypoint-initdb.d/init-achievement.sql
+    ports:
+      - "5442:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d achievement_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and sessions
+  redis:
+    image: redis:7-alpine
+    container_name: steam-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Elasticsearch for search
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: steam-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Kafka for message queuing
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: steam-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - steam-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: steam-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Microservices
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: steam-user-service
+    environment:
+      - USER_DATABASE_URL=postgresql://user:password@user-db:5432/user_service
+      - REDIS_URL=redis://redis:6379
+      - SECRET_KEY=your-secret-key-here
+    depends_on:
+      user-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8001:8001"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  game-catalog-service:
+    build:
+      context: ./services/game-catalog-service
+      dockerfile: Dockerfile
+    container_name: steam-game-catalog-service
+    environment:
+      - GAME_CATALOG_DATABASE_URL=postgresql://user:password@game-catalog-db:5432/game_catalog_service
+      - REDIS_URL=redis://redis:6379
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      game-catalog-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "8002:8002"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: steam-api-gateway
+    environment:
+      - USER_SERVICE_URL=http://user-service:8001
+      - GAME_CATALOG_SERVICE_URL=http://game-catalog-service:8002
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - user-service
+      - game-catalog-service
+      - redis
+    ports:
+      - "8000:8000"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  user_db_data:
+  game_catalog_db_data:
+  review_db_data:
+  shopping_db_data:
+  purchase_db_data:
+  payment_db_data:
+  online_db_data:
+  social_db_data:
+  notification_db_data:
+  recommendation_db_data:
+  achievement_db_data:
+  redis_data:
+  elasticsearch_data:
+
+networks:
+  steam-network:
+    driver: bridge
