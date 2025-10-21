@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Stop Purchase Service
+# Purchase Service Stop Script
+
 echo "Stopping Purchase Service..."
 
 # Find and kill the process running on port 8005

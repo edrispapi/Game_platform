@@ -12,7 +12,7 @@ import uvicorn
 # Create FastAPI app
 app = FastAPI(
     title="Purchase Service",
-    description="Purchase and order management service for Steam-like platform",
+    description="Purchase and order processing service for Steam-like platform",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"

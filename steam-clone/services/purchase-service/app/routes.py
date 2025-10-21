@@ -4,90 +4,80 @@ Purchase Service API Routes
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-from . import crud, schemas, models
-from .database import get_db
+from . import crud, schemas, database
 
 router = APIRouter()
 
-@router.post("/", response_model=schemas.OrderResponse, status_code=status.HTTP_201_CREATED)
-def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
-    """Create a new order"""
-    return crud.create_order(db=db, order=order)
+@router.post("/", response_model=schemas.PurchaseResponse, status_code=status.HTTP_201_CREATED)
+def create_purchase(
+    purchase: schemas.PurchaseCreate,
+    db: Session = Depends(database.get_db)
+):
+    """Create a new purchase"""
+    return crud.create_purchase(db=db, purchase=purchase)
 
-@router.get("/{order_id}", response_model=schemas.OrderResponse)
-def get_order(order_id: int, db: Session = Depends(get_db)):
-    """Get order by ID"""
-    order = crud.get_order(db=db, order_id=order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    return order
+@router.get("/{purchase_id}", response_model=schemas.PurchaseResponse)
+def get_purchase(
+    purchase_id: str,
+    db: Session = Depends(database.get_db)
+):
+    """Get purchase by ID"""
+    purchase = crud.get_purchase(db=db, purchase_id=purchase_id)
+    if not purchase:
+        raise HTTPException(status_code=404, detail="Purchase not found")
+    return purchase
 
-@router.get("/number/{order_number}", response_model=schemas.OrderResponse)
-def get_order_by_number(order_number: str, db: Session = Depends(get_db)):
-    """Get order by order number"""
-    order = crud.get_order_by_number(db=db, order_number=order_number)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    return order
+@router.get("/user/{user_id}", response_model=List[schemas.PurchaseResponse])
+def get_user_purchases(
+    user_id: str,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(database.get_db)
+):
+    """Get purchases for a user"""
+    return crud.get_user_purchases(db=db, user_id=user_id, skip=skip, limit=limit)
 
-@router.get("/user/{user_id}", response_model=List[schemas.OrderResponse])
-def get_user_orders(user_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    """Get orders for a user"""
-    return crud.get_user_orders(db=db, user_id=user_id, skip=skip, limit=limit)
+@router.patch("/{purchase_id}", response_model=schemas.PurchaseResponse)
+def update_purchase(
+    purchase_id: str,
+    purchase_update: schemas.PurchaseUpdate,
+    db: Session = Depends(database.get_db)
+):
+    """Update purchase"""
+    purchase = crud.update_purchase(db=db, purchase_id=purchase_id, purchase_update=purchase_update)
+    if not purchase:
+        raise HTTPException(status_code=404, detail="Purchase not found")
+    return purchase
 
-@router.patch("/{order_id}/status", response_model=schemas.OrderResponse)
-def update_order_status(order_id: int, status_update: schemas.OrderUpdate, db: Session = Depends(get_db)):
-    """Update order status"""
-    order = crud.get_order(db=db, order_id=order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    
-    if status_update.status:
-        order = crud.update_order_status(db=db, order_id=order_id, status=status_update.status)
-    
-    return order
-
-@router.post("/{order_id}/payment", response_model=schemas.PaymentTransactionResponse)
-def create_payment_transaction(order_id: int, transaction: schemas.PaymentTransactionCreate, db: Session = Depends(get_db)):
-    """Create a payment transaction for an order"""
-    # Verify order exists
-    order = crud.get_order(db=db, order_id=order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    
-    transaction.order_id = order_id
-    return crud.create_payment_transaction(db=db, transaction=transaction)
-
-@router.patch("/payment/{transaction_id}/status", response_model=schemas.PaymentTransactionResponse)
-def update_payment_status(transaction_id: str, status_update: dict, db: Session = Depends(get_db)):
-    """Update payment transaction status"""
-    status = status_update.get("status")
-    if not status:
-        raise HTTPException(status_code=400, detail="Status is required")
-    
+@router.post("/refunds", response_model=schemas.RefundResponse, status_code=status.HTTP_201_CREATED)
+def create_refund(
+    refund: schemas.RefundCreate,
+    user_id: str,
+    db: Session = Depends(database.get_db)
+):
+    """Create a refund request"""
     try:
-        payment_status = models.PaymentStatus(status)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid status")
-    
-    transaction = crud.update_payment_status(db=db, transaction_id=transaction_id, status=payment_status)
-    if not transaction:
-        raise HTTPException(status_code=404, detail="Transaction not found")
-    
-    return transaction
+        return crud.create_refund(db=db, refund=refund, user_id=user_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/{order_id}/refund", response_model=schemas.RefundResponse)
-def create_refund(order_id: int, refund: schemas.RefundCreate, db: Session = Depends(get_db)):
-    """Create a refund for an order"""
-    # Verify order exists
-    order = crud.get_order(db=db, order_id=order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    
-    refund.order_id = order_id
-    return crud.create_refund(db=db, refund=refund)
+@router.get("/refunds/{refund_id}", response_model=schemas.RefundResponse)
+def get_refund(
+    refund_id: str,
+    db: Session = Depends(database.get_db)
+):
+    """Get refund by ID"""
+    refund = crud.get_refund(db=db, refund_id=refund_id)
+    if not refund:
+        raise HTTPException(status_code=404, detail="Refund not found")
+    return refund
 
-@router.get("/stats/summary", response_model=schemas.OrderSummary)
-def get_order_summary(user_id: int = None, db: Session = Depends(get_db)):
-    """Get order summary statistics"""
-    return crud.get_order_summary(db=db, user_id=user_id)
+@router.get("/refunds/user/{user_id}", response_model=List[schemas.RefundResponse])
+def get_user_refunds(
+    user_id: str,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(database.get_db)
+):
+    """Get refunds for a user"""
+    return crud.get_user_refunds(db=db, user_id=user_id, skip=skip, limit=limit)

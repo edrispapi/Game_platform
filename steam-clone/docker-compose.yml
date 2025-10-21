@@ -222,6 +222,26 @@ services:
       timeout: 5s
       retries: 5
 
+  monitoring-db:
+    image: postgres:15-alpine
+    container_name: steam-monitoring-db
+    environment:
+      POSTGRES_DB: monitoring_service
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - monitoring_db_data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/init-monitoring.sql:/docker-entrypoint-initdb.d/init-monitoring.sql
+    ports:
+      - "5443:5432"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d monitoring_service"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Redis for caching and sessions
   redis:
     image: redis:7-alpine
@@ -340,6 +360,245 @@ services:
       timeout: 10s
       retries: 3
 
+  review-service:
+    build:
+      context: ./services/review-service
+      dockerfile: Dockerfile
+    container_name: steam-review-service
+    environment:
+      - REVIEW_DATABASE_URL=postgresql://user:password@review-db:5432/review_service
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      review-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8003:8003"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  shopping-service:
+    build:
+      context: ./services/shopping-service
+      dockerfile: Dockerfile
+    container_name: steam-shopping-service
+    environment:
+      - SHOPPING_DATABASE_URL=postgresql://user:password@shopping-db:5432/shopping_service
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      shopping-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8004:8004"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  purchase-service:
+    build:
+      context: ./services/purchase-service
+      dockerfile: Dockerfile
+    container_name: steam-purchase-service
+    environment:
+      - PURCHASE_DATABASE_URL=postgresql://user:password@purchase-db:5432/purchase_service
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      purchase-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8005:8005"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+      dockerfile: Dockerfile
+    container_name: steam-payment-service
+    environment:
+      - PAYMENT_DATABASE_URL=postgresql://user:password@payment-db:5432/payment_service
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      payment-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8006:8006"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  online-service:
+    build:
+      context: ./services/online-service
+      dockerfile: Dockerfile
+    container_name: steam-online-service
+    environment:
+      - ONLINE_DATABASE_URL=postgresql://user:password@online-db:5432/online_service
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      online-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8007:8007"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  social-service:
+    build:
+      context: ./services/social-service
+      dockerfile: Dockerfile
+    container_name: steam-social-service
+    environment:
+      - SOCIAL_DATABASE_URL=postgresql://user:password@social-db:5432/social_service
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      social-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8008:8008"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: steam-notification-service
+    environment:
+      - NOTIFICATION_DATABASE_URL=postgresql://user:password@notification-db:5432/notification_service
+      - REDIS_URL=redis://redis:6379
+      - KAFKA_BROKER=kafka:9092
+    depends_on:
+      notification-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8009:8009"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8009/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  recommendation-service:
+    build:
+      context: ./services/recommendation-service
+      dockerfile: Dockerfile
+    container_name: steam-recommendation-service
+    environment:
+      - RECOMMENDATION_DATABASE_URL=postgresql://user:password@recommendation-db:5432/recommendation_service
+      - REDIS_URL=redis://redis:6379
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      recommendation-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "8010:8010"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  achievement-service:
+    build:
+      context: ./services/achievement-service
+      dockerfile: Dockerfile
+    container_name: steam-achievement-service
+    environment:
+      - ACHIEVEMENT_DATABASE_URL=postgresql://user:password@achievement-db:5432/achievement_service
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      achievement-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8011:8011"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8011/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  monitoring-service:
+    build:
+      context: ./services/monitoring-service
+      dockerfile: Dockerfile
+    container_name: steam-monitoring-service
+    environment:
+      - MONITORING_DATABASE_URL=postgresql://user:password@monitoring-db:5432/monitoring_service
+      - REDIS_URL=redis://redis:6379
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      monitoring-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "8012:8012"
+    networks:
+      - steam-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8012/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   # API Gateway
   api-gateway:
     build:
@@ -349,10 +608,28 @@ services:
     environment:
       - USER_SERVICE_URL=http://user-service:8001
       - GAME_CATALOG_SERVICE_URL=http://game-catalog-service:8002
+      - REVIEW_SERVICE_URL=http://review-service:8003
+      - SHOPPING_SERVICE_URL=http://shopping-service:8004
+      - PURCHASE_SERVICE_URL=http://purchase-service:8005
+      - PAYMENT_SERVICE_URL=http://payment-service:8006
+      - ONLINE_SERVICE_URL=http://online-service:8007
+      - SOCIAL_SERVICE_URL=http://social-service:8008
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8009
+      - RECOMMENDATION_SERVICE_URL=http://recommendation-service:8010
+      - ACHIEVEMENT_SERVICE_URL=http://achievement-service:8011
       - REDIS_URL=redis://redis:6379
     depends_on:
       - user-service
       - game-catalog-service
+      - review-service
+      - shopping-service
+      - purchase-service
+      - payment-service
+      - online-service
+      - social-service
+      - notification-service
+      - recommendation-service
+      - achievement-service
       - redis
     ports:
       - "8000:8000"
@@ -376,6 +653,7 @@ volumes:
   notification_db_data:
   recommendation_db_data:
   achievement_db_data:
+  monitoring_db_data:
   redis_data:
   elasticsearch_data:
 

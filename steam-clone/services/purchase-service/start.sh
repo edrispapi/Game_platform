@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Start Purchase Service
+# Purchase Service Start Script
+
 echo "Starting Purchase Service..."
 
 # Check if virtual environment exists
@@ -15,6 +16,10 @@ source venv/bin/activate
 # Install dependencies
 echo "Installing dependencies..."
 pip install -r requirements.txt
+
+# Run database migrations
+echo "Running database migrations..."
+alembic upgrade head
 
 # Start the service
 echo "Starting Purchase Service on port 8005..."

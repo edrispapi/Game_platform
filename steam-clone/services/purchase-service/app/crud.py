@@ -4,98 +4,65 @@ Purchase Service CRUD Operations
 from sqlalchemy.orm import Session
 from . import models, schemas
 from typing import List, Optional
-import uuid
-from datetime import datetime
 
-def create_order(db: Session, order: schemas.OrderCreate) -> models.Order:
-    """Create a new order"""
-    # Generate unique order number
-    order_number = f"ORD-{uuid.uuid4().hex[:8].upper()}"
-    
-    # Create order
-    db_order = models.Order(
-        user_id=order.user_id,
-        order_number=order_number,
-        total_amount=order.total_amount,
-        currency=order.currency
+def create_purchase(db: Session, purchase: schemas.PurchaseCreate) -> models.Purchase:
+    """Create a new purchase"""
+    db_purchase = models.Purchase(
+        user_id=purchase.user_id,
+        total_amount=purchase.total_amount,
+        currency=purchase.currency,
+        payment_method=purchase.payment_method
     )
-    db.add(db_order)
-    db.flush()  # Get the order ID
+    db.add(db_purchase)
+    db.flush()  # Get the ID
     
-    # Create order items
-    for item in order.order_items:
-        db_item = models.OrderItem(
-            order_id=db_order.id,
+    # Create purchase items
+    for item in purchase.items:
+        db_item = models.PurchaseItem(
+            purchase_id=db_purchase.id,
             game_id=item.game_id,
-            game_title=item.game_title,
+            game_name=item.game_name,
             price=item.price,
             quantity=item.quantity
         )
         db.add(db_item)
     
     db.commit()
-    db.refresh(db_order)
-    return db_order
+    db.refresh(db_purchase)
+    return db_purchase
 
-def get_order(db: Session, order_id: int) -> Optional[models.Order]:
-    """Get order by ID"""
-    return db.query(models.Order).filter(models.Order.id == order_id).first()
+def get_purchase(db: Session, purchase_id: str) -> Optional[models.Purchase]:
+    """Get purchase by ID"""
+    return db.query(models.Purchase).filter(models.Purchase.id == purchase_id).first()
 
-def get_order_by_number(db: Session, order_number: str) -> Optional[models.Order]:
-    """Get order by order number"""
-    return db.query(models.Order).filter(models.Order.order_number == order_number).first()
+def get_user_purchases(db: Session, user_id: str, skip: int = 0, limit: int = 100) -> List[models.Purchase]:
+    """Get purchases for a user"""
+    return db.query(models.Purchase).filter(models.Purchase.user_id == user_id).offset(skip).limit(limit).all()
 
-def get_user_orders(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[models.Order]:
-    """Get orders for a user"""
-    return db.query(models.Order).filter(models.Order.user_id == user_id).offset(skip).limit(limit).all()
-
-def update_order_status(db: Session, order_id: int, status: models.OrderStatus) -> Optional[models.Order]:
-    """Update order status"""
-    db_order = db.query(models.Order).filter(models.Order.id == order_id).first()
-    if db_order:
-        db_order.status = status
-        if status == models.OrderStatus.COMPLETED:
-            db_order.completed_at = datetime.utcnow()
-        db.commit()
-        db.refresh(db_order)
-    return db_order
-
-def create_payment_transaction(db: Session, transaction: schemas.PaymentTransactionCreate) -> models.PaymentTransaction:
-    """Create a payment transaction"""
-    transaction_id = f"TXN-{uuid.uuid4().hex[:12].upper()}"
+def update_purchase(db: Session, purchase_id: str, purchase_update: schemas.PurchaseUpdate) -> Optional[models.Purchase]:
+    """Update purchase"""
+    db_purchase = get_purchase(db, purchase_id)
+    if not db_purchase:
+        return None
     
-    db_transaction = models.PaymentTransaction(
-        order_id=transaction.order_id,
-        transaction_id=transaction_id,
-        payment_method=transaction.payment_method,
-        amount=transaction.amount
-    )
-    db.add(db_transaction)
+    for field, value in purchase_update.dict(exclude_unset=True).items():
+        setattr(db_purchase, field, value)
+    
     db.commit()
-    db.refresh(db_transaction)
-    return db_transaction
+    db.refresh(db_purchase)
+    return db_purchase
 
-def update_payment_status(db: Session, transaction_id: str, status: models.PaymentStatus) -> Optional[models.PaymentTransaction]:
-    """Update payment transaction status"""
-    db_transaction = db.query(models.PaymentTransaction).filter(
-        models.PaymentTransaction.transaction_id == transaction_id
-    ).first()
-    if db_transaction:
-        db_transaction.status = status
-        if status == models.PaymentStatus.PAID:
-            db_transaction.processed_at = datetime.utcnow()
-        db.commit()
-        db.refresh(db_transaction)
-    return db_transaction
-
-def create_refund(db: Session, refund: schemas.RefundCreate) -> models.Refund:
-    """Create a refund"""
-    refund_id = f"REF-{uuid.uuid4().hex[:8].upper()}"
+def create_refund(db: Session, refund: schemas.RefundCreate, user_id: str) -> models.Refund:
+    """Create a refund request"""
+    # Get the purchase to calculate refund amount
+    purchase = get_purchase(db, refund.purchase_id)
+    if not purchase:
+        raise ValueError("Purchase not found")
     
     db_refund = models.Refund(
-        order_id=refund.order_id,
-        refund_id=refund_id,
-        amount=refund.amount,
+        purchase_id=refund.purchase_id,
+        user_id=user_id,
+        amount=purchase.total_amount,
         reason=refund.reason
     )
     db.add(db_refund)
@@ -103,25 +70,10 @@ def create_refund(db: Session, refund: schemas.RefundCreate) -> models.Refund:
     db.refresh(db_refund)
     return db_refund
 
-def get_order_summary(db: Session, user_id: Optional[int] = None) -> dict:
-    """Get order summary statistics"""
-    query = db.query(models.Order)
-    if user_id:
-        query = query.filter(models.Order.user_id == user_id)
-    
-    total_orders = query.count()
-    total_revenue = query.filter(models.Order.status == models.OrderStatus.COMPLETED).with_entities(
-        db.func.sum(models.Order.total_amount)
-    ).scalar() or 0
-    
-    pending_orders = query.filter(models.Order.status == models.OrderStatus.PENDING).count()
-    completed_orders = query.filter(models.Order.status == models.OrderStatus.COMPLETED).count()
-    cancelled_orders = query.filter(models.Order.status == models.OrderStatus.CANCELLED).count()
-    
-    return {
-        "total_orders": total_orders,
-        "total_revenue": total_revenue,
-        "pending_orders": pending_orders,
-        "completed_orders": completed_orders,
-        "cancelled_orders": cancelled_orders
-    }
+def get_refund(db: Session, refund_id: str) -> Optional[models.Refund]:
+    """Get refund by ID"""
+    return db.query(models.Refund).filter(models.Refund.id == refund_id).first()
+
+def get_user_refunds(db: Session, user_id: str, skip: int = 0, limit: int = 100) -> List[models.Refund]:
+    """Get refunds for a user"""
+    return db.query(models.Refund).filter(models.Refund.user_id == user_id).offset(skip).limit(limit).all()

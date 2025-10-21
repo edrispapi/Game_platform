@@ -1,3 +1,6 @@
+"""
+Alembic Environment Configuration
+"""
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -30,6 +33,7 @@ target_metadata = Base.metadata
 # ... etc.
 
 def get_url():
+    """Get database URL from environment or config"""
     return os.getenv("PURCHASE_DATABASE_URL", "postgresql://user:password@localhost:5436/purchase_service")
 
 def run_migrations_offline() -> None:
@@ -65,6 +69,7 @@ def run_migrations_online() -> None:
     """
     configuration = config.get_section(config.config_ini_section)
     configuration["sqlalchemy.url"] = get_url()
+    
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",

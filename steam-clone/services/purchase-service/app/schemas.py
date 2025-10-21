@@ -2,93 +2,65 @@
 Purchase Service Pydantic Schemas
 """
 from pydantic import BaseModel, Field
-from datetime import datetime
 from typing import List, Optional
+from datetime import datetime
 from decimal import Decimal
-from .models import OrderStatus, PaymentStatus
 
-class OrderItemBase(BaseModel):
-    game_id: int
-    game_title: str
+class PurchaseItemBase(BaseModel):
+    game_id: str
+    game_name: str
     price: Decimal
     quantity: int = 1
 
-class OrderItemCreate(OrderItemBase):
+class PurchaseItemCreate(PurchaseItemBase):
     pass
 
-class OrderItemResponse(OrderItemBase):
-    id: int
-    order_id: int
+class PurchaseItemResponse(PurchaseItemBase):
+    id: str
+    purchase_id: str
     created_at: datetime
     
     class Config:
         from_attributes = True
 
-class OrderBase(BaseModel):
-    user_id: int
+class PurchaseBase(BaseModel):
+    user_id: str
     total_amount: Decimal
     currency: str = "USD"
+    payment_method: Optional[str] = None
 
-class OrderCreate(OrderBase):
-    order_items: List[OrderItemCreate]
+class PurchaseCreate(PurchaseBase):
+    items: List[PurchaseItemCreate]
 
-class OrderUpdate(BaseModel):
-    status: Optional[OrderStatus] = None
-    payment_status: Optional[PaymentStatus] = None
+class PurchaseUpdate(BaseModel):
+    status: Optional[str] = None
+    payment_id: Optional[str] = None
 
-class OrderResponse(OrderBase):
-    id: int
-    order_number: str
-    status: OrderStatus
-    payment_status: PaymentStatus
+class PurchaseResponse(PurchaseBase):
+    id: str
+    status: str
+    payment_id: Optional[str]
     created_at: datetime
     updated_at: datetime
-    completed_at: Optional[datetime] = None
-    order_items: List[OrderItemResponse] = []
-    
-    class Config:
-        from_attributes = True
-
-class PaymentTransactionBase(BaseModel):
-    order_id: int
-    payment_method: str
-    amount: Decimal
-
-class PaymentTransactionCreate(PaymentTransactionBase):
-    pass
-
-class PaymentTransactionResponse(PaymentTransactionBase):
-    id: int
-    transaction_id: str
-    status: PaymentStatus
-    gateway_response: Optional[str] = None
-    created_at: datetime
-    processed_at: Optional[datetime] = None
+    items: List[PurchaseItemResponse] = []
     
     class Config:
         from_attributes = True
 
 class RefundBase(BaseModel):
-    order_id: int
-    amount: Decimal
+    purchase_id: str
     reason: Optional[str] = None
 
 class RefundCreate(RefundBase):
     pass
 
 class RefundResponse(RefundBase):
-    id: int
-    refund_id: str
+    id: str
+    user_id: str
+    amount: Decimal
     status: str
+    processed_at: Optional[datetime]
     created_at: datetime
-    processed_at: Optional[datetime] = None
     
     class Config:
         from_attributes = True
-
-class OrderSummary(BaseModel):
-    total_orders: int
-    total_revenue: Decimal
-    pending_orders: int
-    completed_orders: int
-    cancelled_orders: int
