@@ -14,6 +14,7 @@ A comprehensive Steam-like gaming platform built with microservices architecture
 - **Achievements**: Game achievements and progress tracking
 - **Recommendations**: ML-based game recommendations
 - **Notifications**: Real-time notifications system
+- **Monitoring**: Comprehensive logging and metrics
 
 ## 🏗️ Architecture
 
