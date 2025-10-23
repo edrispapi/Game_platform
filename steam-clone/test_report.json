@@ -1,0 +1,42 @@
+{
+  "test_summary": {
+    "total_games": 100,
+    "total_users": 100,
+    "services_working": 0,
+    "services_failed": 13,
+    "working_services": [],
+    "failed_services": [
+      "user-service",
+      "game-catalog-service",
+      "review-service",
+      "shopping-service",
+      "purchase-service",
+      "payment-service",
+      "online-service",
+      "social-service",
+      "notification-service",
+      "recommendation-service",
+      "achievement-service",
+      "monitoring-service",
+      "api-gateway"
+    ]
+  },
+  "game_statistics": {
+    "free_games": 24,
+    "paid_games": 76,
+    "early_access_games": 18,
+    "vr_games": 15,
+    "multiplayer_games": 100,
+    "average_price": 38.199868421052635,
+    "average_rating": 85.49
+  },
+  "user_statistics": {
+    "active_users": 77,
+    "verified_users": 62,
+    "premium_users": 30,
+    "countries": 15,
+    "languages": 10
+  },
+  "api_test_results": {},
+  "swagger_test_results": {}
+}
