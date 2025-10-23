@@ -371,14 +371,14 @@ def get_stats():
 
 if __name__ == "__main__":
     print("🚀 Starting Steam Clone Test Service...")
-    print("📚 API Documentation: http://localhost:8000/docs")
-    print("🔍 Health Check: http://localhost:8000/health")
-    print("📊 Statistics: http://localhost:8000/stats")
+    print("📚 API Documentation: http://localhost:9000/docs")
+    print("🔍 Health Check: http://localhost:9000/health")
+    print("📊 Statistics: http://localhost:9000/stats")
     print("⏹️  Press Ctrl+C to stop")
     
     uvicorn.run(
         "simple_service:app",
         host="0.0.0.0",
-        port=8000,
+        port=9000,
         reload=True
     )
