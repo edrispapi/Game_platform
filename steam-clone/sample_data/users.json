@@ -1,0 +1,322 @@
+[
+  {
+    "id": "7fc19f96-e331-448c-80c2-928e828f9cca",
+    "username": "user9405",
+    "email": "user8482@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Maria",
+    "last_name": "Martinez",
+    "display_name": "user5212#6371",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user1",
+    "country": "GB",
+    "language": "ja",
+    "timezone": "UTC+1",
+    "is_active": true,
+    "is_verified": true,
+    "is_premium": false,
+    "created_at": "2023-12-21T14:07:20.767903",
+    "updated_at": "2025-10-23T14:07:20.767910",
+    "last_login": "2025-10-06T14:07:20.767913",
+    "preferences": {
+      "theme": "light",
+      "notifications": {
+        "email": false,
+        "push": false,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": false,
+        "game_library_public": false,
+        "activity_public": true
+      }
+    }
+  },
+  {
+    "id": "2e34c4d6-8999-4747-b05a-6e0c49ea8281",
+    "username": "user2056",
+    "email": "user6604@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Alex",
+    "last_name": "Rodriguez",
+    "display_name": "user5126#4640",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user2",
+    "country": "US",
+    "language": "ko",
+    "timezone": "UTC-5",
+    "is_active": true,
+    "is_verified": true,
+    "is_premium": false,
+    "created_at": "2025-07-12T14:07:20.767952",
+    "updated_at": "2025-10-23T14:07:20.767958",
+    "last_login": "2025-10-10T14:07:20.767960",
+    "preferences": {
+      "theme": "dark",
+      "notifications": {
+        "email": false,
+        "push": false,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": true,
+        "game_library_public": true,
+        "activity_public": true
+      }
+    }
+  },
+  {
+    "id": "cff2e088-6715-4617-81c2-6d27bb67127c",
+    "username": "user8831",
+    "email": "user1688@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Mike",
+    "last_name": "Rodriguez",
+    "display_name": "user8364#7186",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user3",
+    "country": "ES",
+    "language": "ko",
+    "timezone": "UTC-8",
+    "is_active": true,
+    "is_verified": false,
+    "is_premium": false,
+    "created_at": "2025-08-13T14:07:20.767987",
+    "updated_at": "2025-10-23T14:07:20.767991",
+    "last_login": "2025-10-07T14:07:20.767993",
+    "preferences": {
+      "theme": "auto",
+      "notifications": {
+        "email": false,
+        "push": false,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": true,
+        "game_library_public": true,
+        "activity_public": true
+      }
+    }
+  },
+  {
+    "id": "340a1058-e643-46fe-81ab-29183eb4607d",
+    "username": "user8459",
+    "email": "user7884@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Sarah",
+    "last_name": "Rodriguez",
+    "display_name": "user4056#1522",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user4",
+    "country": "IT",
+    "language": "es",
+    "timezone": "UTC+1",
+    "is_active": true,
+    "is_verified": true,
+    "is_premium": false,
+    "created_at": "2023-12-09T14:07:20.768026",
+    "updated_at": "2025-10-23T14:07:20.768030",
+    "last_login": "2025-10-22T14:07:20.768032",
+    "preferences": {
+      "theme": "auto",
+      "notifications": {
+        "email": false,
+        "push": true,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": false,
+        "game_library_public": false,
+        "activity_public": true
+      }
+    }
+  },
+  {
+    "id": "fdf09c47-3f43-4a61-8344-fe897c1eb681",
+    "username": "user4226",
+    "email": "user2777@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Alex",
+    "last_name": "Smith",
+    "display_name": "user9221#8339",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user5",
+    "country": "FR",
+    "language": "ru",
+    "timezone": "UTC+1",
+    "is_active": true,
+    "is_verified": true,
+    "is_premium": false,
+    "created_at": "2024-09-02T14:07:20.768053",
+    "updated_at": "2025-10-23T14:07:20.768057",
+    "last_login": "2025-10-20T14:07:20.768059",
+    "preferences": {
+      "theme": "dark",
+      "notifications": {
+        "email": false,
+        "push": true,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": false,
+        "game_library_public": false,
+        "activity_public": false
+      }
+    }
+  },
+  {
+    "id": "5c210876-f7b6-4b39-84bb-6f7a8a9e96fe",
+    "username": "user6579",
+    "email": "user1516@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "John",
+    "last_name": "Rodriguez",
+    "display_name": "user2490#4706",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user6",
+    "country": "US",
+    "language": "en",
+    "timezone": "UTC+8",
+    "is_active": true,
+    "is_verified": true,
+    "is_premium": false,
+    "created_at": "2025-09-01T14:07:20.768079",
+    "updated_at": "2025-10-23T14:07:20.768082",
+    "last_login": "2025-09-30T14:07:20.768084",
+    "preferences": {
+      "theme": "auto",
+      "notifications": {
+        "email": true,
+        "push": true,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": false,
+        "game_library_public": true,
+        "activity_public": true
+      }
+    }
+  },
+  {
+    "id": "78a0b41f-0593-4c2a-a9d7-af510f2a987c",
+    "username": "user9376",
+    "email": "user8113@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Sarah",
+    "last_name": "Garcia",
+    "display_name": "user8208#9299",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user7",
+    "country": "GB",
+    "language": "it",
+    "timezone": "UTC-8",
+    "is_active": true,
+    "is_verified": false,
+    "is_premium": false,
+    "created_at": "2025-03-04T14:07:20.768107",
+    "updated_at": "2025-10-23T14:07:20.768110",
+    "last_login": "2025-10-23T14:07:20.768112",
+    "preferences": {
+      "theme": "light",
+      "notifications": {
+        "email": false,
+        "push": false,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": false,
+        "game_library_public": false,
+        "activity_public": false
+      }
+    }
+  },
+  {
+    "id": "55c0f350-3203-4ebc-9ddf-240f83dcfadc",
+    "username": "user7392",
+    "email": "user6684@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Jane",
+    "last_name": "Williams",
+    "display_name": "user1784#7005",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user8",
+    "country": "KR",
+    "language": "ja",
+    "timezone": "UTC+8",
+    "is_active": true,
+    "is_verified": false,
+    "is_premium": false,
+    "created_at": "2024-03-19T14:07:20.768134",
+    "updated_at": "2025-10-23T14:07:20.768137",
+    "last_login": "2025-09-25T14:07:20.768139",
+    "preferences": {
+      "theme": "dark",
+      "notifications": {
+        "email": false,
+        "push": true,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": false,
+        "game_library_public": true,
+        "activity_public": false
+      }
+    }
+  },
+  {
+    "id": "0192f252-a3d8-41f3-a626-af2ac6a72f32",
+    "username": "user2430",
+    "email": "user3417@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Mike",
+    "last_name": "Martinez",
+    "display_name": "user9615#4205",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user9",
+    "country": "DE",
+    "language": "en",
+    "timezone": "UTC+8",
+    "is_active": true,
+    "is_verified": false,
+    "is_premium": false,
+    "created_at": "2024-06-03T14:07:20.768159",
+    "updated_at": "2025-10-23T14:07:20.768162",
+    "last_login": "2025-10-15T14:07:20.768164",
+    "preferences": {
+      "theme": "dark",
+      "notifications": {
+        "email": true,
+        "push": true,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": false,
+        "game_library_public": true,
+        "activity_public": true
+      }
+    }
+  },
+  {
+    "id": "87962229-1609-4074-b642-538ec33f767e",
+    "username": "user8200",
+    "email": "user3116@example.com",
+    "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HSyK8m2",
+    "first_name": "Lisa",
+    "last_name": "Davis",
+    "display_name": "user2388#1469",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user10",
+    "country": "KR",
+    "language": "pt",
+    "timezone": "UTC+0",
+    "is_active": true,
+    "is_verified": true,
+    "is_premium": false,
+    "created_at": "2024-10-31T14:07:20.768183",
+    "updated_at": "2025-10-23T14:07:20.768187",
+    "last_login": "2025-09-30T14:07:20.768189",
+    "preferences": {
+      "theme": "auto",
+      "notifications": {
+        "email": true,
+        "push": true,
+        "in_game": true
+      },
+      "privacy": {
+        "profile_public": false,
+        "game_library_public": true,
+        "activity_public": false
+      }
+    }
+  }
+]
