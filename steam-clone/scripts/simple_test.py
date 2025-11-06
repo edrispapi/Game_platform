@@ -284,19 +284,19 @@ class SimpleSteamCloneTester:
         logger.info("💾 Saving data to files...")
         
         # Save games data
-        with open('/workspace/steam-clone/sample_data/games.json', 'w') as f:
+        with open('/workspace/red-game/sample_data/games.json', 'w') as f:
             json.dump(games, f, indent=2)
         
         # Save users data
-        with open('/workspace/steam-clone/sample_data/users.json', 'w') as f:
+        with open('/workspace/red-game/sample_data/users.json', 'w') as f:
             json.dump(users, f, indent=2)
         
         # Save reviews data
-        with open('/workspace/steam-clone/sample_data/reviews.json', 'w') as f:
+        with open('/workspace/red-game/sample_data/reviews.json', 'w') as f:
             json.dump(reviews, f, indent=2)
         
         # Save achievements data
-        with open('/workspace/steam-clone/sample_data/achievements.json', 'w') as f:
+        with open('/workspace/red-game/sample_data/achievements.json', 'w') as f:
             json.dump(achievements, f, indent=2)
         
         logger.info("✅ Data saved to sample_data/ directory")
@@ -316,7 +316,7 @@ class SimpleSteamCloneTester:
         
         # Save data to files
         import os
-        os.makedirs('/workspace/steam-clone/sample_data', exist_ok=True)
+        os.makedirs('/workspace/red-game/sample_data', exist_ok=True)
         self.save_data_to_files(games, users, reviews, achievements)
         
         logger.info("\n🎉 Test completed successfully!")
