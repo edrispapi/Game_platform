@@ -99,7 +99,7 @@ A phased approach to build iteratively. Estimated timeline assumes a small team 
 
 #### Project Structure
 ```
-steam-clone/
+red-game/
 ├── services/                 # One folder per microservice
 │   ├── user-service/
 │   │   ├── app/             # FastAPI app code
@@ -115,6 +115,7 @@ steam-clone/
 ├── docker-compose.yml       # Local dev stack
 ├── kubernetes/              # Prod manifests (optional)
 ├── docs/                    # API specs, diagrams
+├── templates/               # Frontend templates and assets
 ├── tests/                   # Shared tests
 ├── .env.example             # Env vars template
 └── README.md                # Full setup guide
@@ -171,7 +172,7 @@ STRIPE_API_KEY=sk_test_...
 2. **Clone & Install**:
    ```
    git clone <your-repo>
-   cd steam-clone
+   cd red-game
    pip install -r requirements-global.txt  # Shared tools
    pre-commit install  # For code quality
    ```
