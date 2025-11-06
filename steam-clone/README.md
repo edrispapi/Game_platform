@@ -1,6 +1,6 @@
-# Steam Clone - Microservices Platform
+# Red Game Platform - Microservices Platform
 
-A comprehensive Steam-like gaming platform built with microservices architecture using FastAPI and PostgreSQL.
+A comprehensive Red Game experience built with microservices architecture using FastAPI and PostgreSQL.
 
 ## 🎮 Features
 
@@ -13,8 +13,9 @@ A comprehensive Steam-like gaming platform built with microservices architecture
 - **Online Status**: Real-time presence, multiplayer support
 - **Achievements**: Game achievements and progress tracking
 - **Recommendations**: ML-based game recommendations
-- **Notifications**: Real-time notifications system
+- **Notifications**: Real-time notifications system and templated delivery
 - **Monitoring**: Comprehensive logging and metrics
+- **Templates**: Shareable assets for future UI drops located in `templates/`
 
 ## 🏗️ Architecture
 
@@ -55,7 +56,7 @@ A comprehensive Steam-like gaming platform built with microservices architecture
 
 ```bash
 git clone <repository-url>
-cd steam-clone
+cd red-game
 ```
 
 ### 2. Environment Setup
@@ -90,6 +91,7 @@ docker-compose logs -f
 - **Redis**: localhost:6379
 - **Elasticsearch**: http://localhost:9200
 - **Kafka**: localhost:9092
+- **Templates Directory**: `templates/` (for UI and notification assets)
 
 ## 🛠️ Development
 
@@ -237,21 +239,3 @@ Each service provides interactive API documentation:
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-For support and questions:
-
-- Create an issue in the repository
-- Check the documentation
-- Review the API docs at `/docs` endpoints
-
-## 🗺️ Roadmap
-
-- [ ] Complete all microservices
-- [ ] Add comprehensive testing
-- [ ] Implement monitoring and logging
-- [ ] Add CI/CD pipeline
-- [ ] Performance optimization
-- [ ] Security enhancements
-- [ ] Mobile app support

@@ -33,7 +33,7 @@ app.add_middleware(
 def load_sample_data():
     """Load sample data from JSON files"""
     data = {}
-    sample_data_dir = "/workspace/steam-clone/sample_data"
+    sample_data_dir = "/workspace/red-game/sample_data"
     
     for filename in ["games.json", "users.json", "reviews.json", "achievements.json"]:
         filepath = os.path.join(sample_data_dir, filename)

@@ -171,7 +171,7 @@ def health_check():
     """Health check endpoint"""
     return {
         "status": "healthy", 
-        "service": "steam-clone-test-service",
+        "service": "red-game-test-service",
         "timestamp": datetime.now().isoformat(),
         "games_count": len(mock_games),
         "users_count": len(mock_users)
@@ -362,7 +362,7 @@ def get_stats():
             "languages": len(set(u["language"] for u in mock_users))
         },
         "service": {
-            "name": "steam-clone-test-service",
+            "name": "red-game-test-service",
             "version": "1.0.0",
             "status": "healthy",
             "timestamp": datetime.now().isoformat()

@@ -22,6 +22,21 @@ class SimpleTestRunner:
         self.session = None
         self.games_data = []
         self.users_data = []
+        self.service_urls = {
+            'api-gateway': 'http://localhost:8000',
+            'red-game-user-service': 'http://localhost:8001',
+            'red-game-game-catalog-service': 'http://localhost:8002',
+            'red-game-review-service': 'http://localhost:8003',
+            'red-game-shopping-service': 'http://localhost:8004',
+            'red-game-purchase-service': 'http://localhost:8005',
+            'red-game-payment-service': 'http://localhost:8006',
+            'red-game-online-service': 'http://localhost:8007',
+            'red-game-social-service': 'http://localhost:8008',
+            'red-game-notification-service': 'http://localhost:8009',
+            'red-game-recommendation-service': 'http://localhost:8010',
+            'red-game-achievement-service': 'http://localhost:8011',
+            'red-game-monitoring-service': 'http://localhost:8012'
+        }
         
     async def __aenter__(self):
         self.session = aiohttp.ClientSession(
@@ -188,26 +203,10 @@ class SimpleTestRunner:
         """Test all services to ensure they're working properly"""
         logger.info("🧪 Testing all services...")
         
-        service_urls = {
-            'user-service': 'http://localhost:8001',
-            'game-catalog-service': 'http://localhost:8002',
-            'review-service': 'http://localhost:8003',
-            'shopping-service': 'http://localhost:8004',
-            'purchase-service': 'http://localhost:8005',
-            'payment-service': 'http://localhost:8006',
-            'online-service': 'http://localhost:8007',
-            'social-service': 'http://localhost:8008',
-            'notification-service': 'http://localhost:8009',
-            'recommendation-service': 'http://localhost:8010',
-            'achievement-service': 'http://localhost:8011',
-            'monitoring-service': 'http://localhost:8012',
-            'api-gateway': 'http://localhost:8000'
-        }
-        
         working_services = []
         failed_services = []
-        
-        for service_name, url in service_urls.items():
+
+        for service_name, url in self.service_urls.items():
             try:
                 async with self.session.get(f"{url}/health", timeout=5) as response:
                     if response.status == 200:
@@ -220,7 +219,7 @@ class SimpleTestRunner:
                 failed_services.append(service_name)
                 logger.error(f"❌ {service_name} failed: {e}")
         
-        logger.info(f"Working services: {len(working_services)}/{len(service_urls)}")
+        logger.info(f"Working services: {len(working_services)}/{len(self.service_urls)}")
         logger.info(f"Failed services: {failed_services}")
         
         return working_services, failed_services
@@ -230,22 +229,22 @@ class SimpleTestRunner:
         logger.info("🔍 Testing API endpoints...")
         
         endpoint_tests = {
-            'user-service': [
+            'red-game-user-service': [
                 ('GET', '/users', 'List users'),
                 ('GET', '/users/me', 'Get current user'),
                 ('POST', '/users/register', 'Register user')
             ],
-            'game-catalog-service': [
+            'red-game-game-catalog-service': [
                 ('GET', '/games', 'List games'),
                 ('GET', '/games/search', 'Search games'),
                 ('GET', '/genres', 'List genres'),
                 ('GET', '/tags', 'List tags')
             ],
-            'review-service': [
+            'red-game-review-service': [
                 ('GET', '/reviews', 'List reviews'),
                 ('GET', '/reviews/game/{game_id}', 'Get game reviews')
             ],
-            'shopping-service': [
+            'red-game-shopping-service': [
                 ('GET', '/cart', 'Get cart'),
                 ('GET', '/wishlist', 'Get wishlist')
             ],
@@ -259,7 +258,7 @@ class SimpleTestRunner:
         
         for service in working_services:
             if service in endpoint_tests:
-                service_url = f"http://localhost:{8000 + list(service_urls.keys()).index(service)}"
+                service_url = f"http://localhost:{8000 + list(self.service_urls.keys()).index(service)}"
                 test_results[service] = []
                 
                 for method, endpoint, description in endpoint_tests[service]:
@@ -300,7 +299,7 @@ class SimpleTestRunner:
         swagger_results = {}
         
         for service in working_services:
-            service_url = f"http://localhost:{8000 + list(service_urls.keys()).index(service)}"
+            service_url = f"http://localhost:{8000 + list(self.service_urls.keys()).index(service)}"
             
             try:
                 # Test /docs endpoint
@@ -361,7 +360,7 @@ class SimpleTestRunner:
         }
         
         # Save report to file
-        with open('/workspace/steam-clone/test_report.json', 'w') as f:
+        with open('/workspace/red-game/test_report.json', 'w') as f:
             json.dump(report, f, indent=2, default=str)
         
         logger.info("📄 Test report saved to test_report.json")

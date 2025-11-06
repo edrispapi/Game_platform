@@ -1423,7 +1423,7 @@ class EnhancedSteamDBImporter:
         }
         
         # Save report to file
-        with open('/workspace/steam-clone/test_report.json', 'w') as f:
+        with open('/workspace/red-game/test_report.json', 'w') as f:
             json.dump(report, f, indent=2, default=str)
         
         logger.info("📄 Test report saved to test_report.json")
