@@ -209,3 +209,26 @@ class UserPreferenceCRUD:
         self.db.commit()
         self.db.refresh(db_preference)
         return db_preference
+
+def create_user(db: Session, user: schemas.UserCreate) -> models.User:
+    """Convenience wrapper to create a user using a transient session."""
+
+    return UserCRUD(db).create_user(user)
+
+
+def get_user_by_username(db: Session, username: str) -> Optional[models.User]:
+    """Retrieve a user by username using the shared CRUD helper."""
+
+    return UserCRUD(db).get_user_by_username(username)
+
+
+def authenticate_user(db: Session, username: str, password: str) -> Optional[models.User]:
+    """Authenticate a user by username (or email) and password."""
+
+    user_crud = UserCRUD(db)
+    user = user_crud.get_user_by_username_or_email(username)
+    if not user:
+        return None
+    if not user_crud.verify_password(user, password):
+        return None
+    return user

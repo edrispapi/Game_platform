@@ -35,8 +35,14 @@ class GameBase(BaseModel):
     title: str = Field(..., max_length=255)
     description: Optional[str] = None
     short_description: Optional[str] = Field(None, max_length=500)
-    developer: str = Field(..., max_length=255)
-    publisher: str = Field(..., max_length=255)
+    developer: str = Field(
+        default="Unknown Developer",
+        max_length=255,
+    )
+    publisher: str = Field(
+        default="Unknown Publisher",
+        max_length=255,
+    )
     price: float = Field(..., ge=0)
     original_price: Optional[float] = Field(None, ge=0)
     currency: str = Field(default="USD", max_length=3)
@@ -65,6 +71,9 @@ class GameCreate(GameBase):
     genre_ids: Optional[List[int]] = None
     tag_ids: Optional[List[int]] = None
     platform_ids: Optional[List[int]] = None
+    # Convenience fields used by lightweight clients/tests
+    genre: Optional[str] = Field(None, max_length=100)
+    platform: Optional[str] = Field(None, max_length=50)
 
 class GameUpdate(BaseModel):
     title: Optional[str] = Field(None, max_length=255)
