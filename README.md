@@ -95,6 +95,50 @@ A phased approach to build iteratively. Estimated timeline assumes a small team 
 
 **Total Estimated Time**: 16-23 weeks for MVP. Use Agile sprints (2-week cycles) for flexibility.
 
+### Frontend integration overview
+
+To connect a React (or any SPA) frontend to this FastAPI microservice backend you only need a
+handful of integration steps:
+
+1. **Expose the API Gateway to the browser.** Start the gateway on port `8000` and make sure the
+   React dev server proxies API calls to it. With Vite the proxy configuration looks like:
+
+   ```ts
+   // vite.config.ts
+   export default defineConfig({
+     server: {
+       proxy: {
+         '/api': {
+           target: 'http://localhost:8000',
+           changeOrigin: true,
+           rewrite: (path) => path.replace(/^\/api/, ''),
+         },
+       },
+     },
+   })
+   ```
+
+2. **Configure allowed origins once.** All services share the same CORS list via
+   `shared/config.py`. Set `ALLOWED_ORIGINS` in your `.env` file (comma separated) so both the API
+   gateway and individual microservices accept calls from your frontend domains:
+
+   ```env
+   ALLOWED_ORIGINS=http://localhost:5173,https://app.example.com
+   ```
+
+3. **Use the shared authentication helpers.** Import `create_access_token` and `verify_token` from
+   `shared.auth` inside new services so every route can issue and validate JWTs consistently. Your
+   frontend can store the resulting bearer token (e.g. in localStorage) and attach it to each
+   request.
+
+4. **Reuse the CRUD convenience wrappers.** `services.user_service.app.crud` and
+   `services.game_catalog_service.app.crud` now expose module level helpers, making it trivial to
+   call them from scripts or tests without re-instantiating classes—ideal for onboarding frontend
+   developers with mocked data flows.
+
+5. **Document API usage with Swagger.** Every service (and the gateway) exposes `/docs`. Point your
+   frontend developers to those URLs so they can explore endpoints quickly.
+
 ### Documentation for Running the Project
 
 #### Project Structure
