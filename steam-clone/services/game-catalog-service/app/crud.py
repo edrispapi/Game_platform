@@ -317,3 +317,22 @@ class PlatformCRUD:
     def get_platforms(self, skip: int = 0, limit: int = 100) -> List[models.Platform]:
         """Get list of platforms"""
         return self.db.query(models.Platform).offset(skip).limit(limit).all()
+
+def create_game(db: Session, game: schemas.GameCreate) -> models.Game:
+    """Create a game using the shared CRUD helper."""
+
+    return GameCRUD(db).create_game(game)
+
+
+def get_game(db: Session, game_id: int) -> Optional[models.Game]:
+    """Retrieve a single game by its identifier."""
+
+    return GameCRUD(db).get_game_by_id(game_id)
+
+
+def search_games(db: Session, query: str) -> List[models.Game]:
+    """Simplified search helper used by tests and lightweight clients."""
+
+    filters = schemas.GameSearchFilters(query=query)
+    games, _ = GameCRUD(db).search_games(filters)
+    return games
