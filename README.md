@@ -205,6 +205,26 @@ ELASTICSEARCH_URL=http://localhost:9200
 STRIPE_API_KEY=sk_test_...
 ```
 
+#### Running the platform with Docker Compose
+1. Ensure Docker Desktop (or any engine supporting Compose V2) is running.
+2. From the repository root (`steam/Game_platform`), build + start the entire stack:
+
+   ```bash
+   docker compose up --build
+   ```
+
+   This launches Postgres, Redis, MinIO (S3-compatible storage), every microservice, and the API gateway.
+
+3. To run a subset (e.g., only the user service and shared infrastructure) use the service names defined in `docker-compose.yml`:
+
+   ```bash
+   docker compose up postgres user-service
+   ```
+
+4. Postgres credentials are shared (`steam` / `steam`); each microservice connects to its own database (`user_service`, `shopping_service`, ...).
+5. MinIO (S3 replacement) is reachable at `http://localhost:9000` (console `http://localhost:9001`) with credentials `minio` / `minio123`.
+6. Swagger/Redoc for each service remains exposed on the mapped host ports (e.g., user service `http://localhost:13001/docs`, API gateway `http://localhost:13000/docs`).
+
 #### Setup & Running Instructions
 1. **Prerequisites**:
    - Python 3.11+.

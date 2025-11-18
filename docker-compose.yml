@@ -1,0 +1,288 @@
+x-minio-env: &minio-env
+  FILE_STORAGE_ENDPOINT: http://minio:9000
+  FILE_STORAGE_ACCESS_KEY: minio
+  FILE_STORAGE_SECRET_KEY: minio123
+  FILE_STORAGE_BUCKET: game-downloads
+  FILE_STORAGE_REGION: us-east-1
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: steam-postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: steam
+      POSTGRES_PASSWORD: steam
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U steam"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - steam-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: steam-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - steam-net
+
+  minio:
+    image: minio/minio:latest
+    container_name: steam-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - steam-net
+
+  user-service:
+    build:
+      context: ./services/user-service
+    environment:
+      <<: *minio-env
+      USER_DATABASE_URL: postgresql://steam:steam@postgres:5432/user_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13001:8001"
+    networks:
+      - steam-net
+
+  game-catalog-service:
+    build:
+      context: ./services/game-catalog-service
+    environment:
+      <<: *minio-env
+      GAME_CATALOG_DATABASE_URL: postgresql://steam:steam@postgres:5432/game_catalog_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13002:8002"
+    networks:
+      - steam-net
+
+  review-service:
+    build:
+      context: ./services/review-service
+    environment:
+      <<: *minio-env
+      REVIEW_DATABASE_URL: postgresql://steam:steam@postgres:5432/review_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13003:8003"
+    networks:
+      - steam-net
+
+  shopping-service:
+    build:
+      context: ./services/shopping-service
+    environment:
+      <<: *minio-env
+      SHOPPING_DATABASE_URL: postgresql://steam:steam@postgres:5432/shopping_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13004:8004"
+    networks:
+      - steam-net
+
+  purchase-service:
+    build:
+      context: ./services/purchase-service
+    environment:
+      <<: *minio-env
+      PURCHASE_DATABASE_URL: postgresql://steam:steam@postgres:5432/purchase_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13005:8005"
+    networks:
+      - steam-net
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+    environment:
+      <<: *minio-env
+      PAYMENT_DATABASE_URL: postgresql://steam:steam@postgres:5432/payment_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13006:8006"
+    networks:
+      - steam-net
+
+  online-service:
+    build:
+      context: ./services/online-service
+    environment:
+      <<: *minio-env
+      ONLINE_DATABASE_URL: postgresql://steam:steam@postgres:5432/online_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13007:8007"
+    networks:
+      - steam-net
+
+  social-service:
+    build:
+      context: ./services/social-service
+    environment:
+      <<: *minio-env
+      SOCIAL_DATABASE_URL: postgresql://steam:steam@postgres:5432/social_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13008:8008"
+    networks:
+      - steam-net
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+    environment:
+      <<: *minio-env
+      NOTIFICATION_DATABASE_URL: postgresql://steam:steam@postgres:5432/notification_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13009:8009"
+    networks:
+      - steam-net
+
+  recommendation-service:
+    build:
+      context: ./services/recommendation-service
+    environment:
+      <<: *minio-env
+      RECOMMENDATION_DATABASE_URL: postgresql://steam:steam@postgres:5432/recommendation_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13010:8010"
+    networks:
+      - steam-net
+
+  achievement-service:
+    build:
+      context: ./services/achievement-service
+    environment:
+      <<: *minio-env
+      ACHIEVEMENT_DATABASE_URL: postgresql://steam:steam@postgres:5432/achievement_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13011:8011"
+    networks:
+      - steam-net
+
+  monitoring-service:
+    build:
+      context: ./services/monitoring-service
+    environment:
+      <<: *minio-env
+      MONITORING_DATABASE_URL: postgresql://steam:steam@postgres:5432/monitoring_service
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:13000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13012:8012"
+    networks:
+      - steam-net
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+    environment:
+      <<: *minio-env
+      USER_SERVICE_URL: http://user-service:8001
+      GAME_CATALOG_SERVICE_URL: http://game-catalog-service:8002
+      REVIEW_SERVICE_URL: http://review-service:8003
+      SHOPPING_SERVICE_URL: http://shopping-service:8004
+      PURCHASE_SERVICE_URL: http://purchase-service:8005
+      PAYMENT_SERVICE_URL: http://payment-service:8006
+      ONLINE_SERVICE_URL: http://online-service:8007
+      SOCIAL_SERVICE_URL: http://social-service:8008
+      NOTIFICATION_SERVICE_URL: http://notification-service:8009
+      RECOMMENDATION_SERVICE_URL: http://recommendation-service:8010
+      ACHIEVEMENT_SERVICE_URL: http://achievement-service:8011
+      REDIS_URL: redis://redis:6379/0
+      ALLOWED_ORIGINS: http://localhost:3000
+    depends_on:
+      redis:
+        condition: service_started
+      user-service:
+        condition: service_started
+      game-catalog-service:
+        condition: service_started
+      review-service:
+        condition: service_started
+      shopping-service:
+        condition: service_started
+      purchase-service:
+        condition: service_started
+      payment-service:
+        condition: service_started
+      online-service:
+        condition: service_started
+      social-service:
+        condition: service_started
+      notification-service:
+        condition: service_started
+      recommendation-service:
+        condition: service_started
+      achievement-service:
+        condition: service_started
+      monitoring-service:
+        condition: service_started
+    ports:
+      - "13000:8000"
+    networks:
+      - steam-net
+
+volumes:
+  postgres-data:
+  minio-data:
+
+networks:
+  steam-net:
+    driver: bridge
+
