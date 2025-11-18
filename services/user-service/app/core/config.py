@@ -7,7 +7,6 @@ its runtime settings without importing from a global package.
 from __future__ import annotations
 
 import os
-import sys
 from dataclasses import dataclass, field
 from typing import List
 
@@ -23,19 +22,13 @@ def _parse_allowed_origins(raw_value: str | None) -> List[str]:
     return [origin.strip() for origin in raw_value.split(",") if origin.strip()]
 
 
-_IS_TESTING = (
-    os.getenv("TESTING") == "true"
-    or "pytest" in sys.modules
-    or any("pytest" in arg.lower() for arg in sys.argv)
-)
-
-
 def _db_url(
-    env_var: str, default: str, *, legacy_env: str | None = None, test_path: str | None = None
+    env_var: str,
+    default: str,
+    *,
+    legacy_env: str | None = None,
 ) -> str:
-    """Resolve a service database URL with fallbacks and test overrides."""
-    if _IS_TESTING and test_path:
-        return test_path
+    """Resolve a service database URL with fallbacks."""
     return (
         os.getenv(env_var)
         or (os.getenv(legacy_env) if legacy_env else None)
@@ -60,17 +53,14 @@ class Settings:
     )
 
     # ---------- DATABASE URLS ----------
-    DATABASE_URL: str = (
-        "sqlite:///./test_shared.db"
-        if _IS_TESTING
-        else os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/shared")
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL", "postgresql://user:password@localhost:5432/shared"
     )
 
     USER_DATABASE_URL: str = _db_url(
         "USER_DATABASE_URL",
         "postgresql://user:password@localhost:5432/user_service",
         legacy_env="USER_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_user.db",
     )
     USER_SERVICE_PORT: int = int(os.getenv("USER_SERVICE_PORT", "8001"))
 
@@ -78,7 +68,6 @@ class Settings:
         "SOCIAL_DATABASE_URL",
         "postgresql://user:password@localhost:5432/social_service",
         legacy_env="SOCIAL_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_social.db",
     )
     SOCIAL_SERVICE_PORT: int = int(os.getenv("SOCIAL_SERVICE_PORT", "8008"))
 
@@ -86,7 +75,6 @@ class Settings:
         "SHOPPING_DATABASE_URL",
         "postgresql://user:password@localhost:5432/shopping_service",
         legacy_env="SHOPPING_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_shopping.db",
     )
     SHOPPING_SERVICE_PORT: int = int(os.getenv("SHOPPING_SERVICE_PORT", "8004"))
 
@@ -94,7 +82,6 @@ class Settings:
         "REVIEW_DATABASE_URL",
         "postgresql://user:password@localhost:5432/review_service",
         legacy_env="REVIEW_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_review.db",
     )
     REVIEW_SERVICE_PORT: int = int(os.getenv("REVIEW_SERVICE_PORT", "8003"))
 
@@ -102,7 +89,6 @@ class Settings:
         "RECOMMENDATION_DATABASE_URL",
         "postgresql://user:password@localhost:5432/recommendation_service",
         legacy_env="RECOMMENDATION_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_recommendation.db",
     )
     RECOMMENDATION_SERVICE_PORT: int = int(os.getenv("RECOMMENDATION_SERVICE_PORT", "8010"))
 
@@ -110,7 +96,6 @@ class Settings:
         "PURCHASE_DATABASE_URL",
         "postgresql://user:password@localhost:5432/purchase_service",
         legacy_env="PURCHASE_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_purchase.db",
     )
     PURCHASE_SERVICE_PORT: int = int(os.getenv("PURCHASE_SERVICE_PORT", "8005"))
 
@@ -118,7 +103,6 @@ class Settings:
         "PAYMENT_DATABASE_URL",
         "postgresql://user:password@localhost:5432/payment_service",
         legacy_env="PAYMENT_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_payment.db",
     )
     PAYMENT_SERVICE_PORT: int = int(os.getenv("PAYMENT_SERVICE_PORT", "8006"))
 
@@ -126,7 +110,6 @@ class Settings:
         "ONLINE_DATABASE_URL",
         "postgresql://user:password@localhost:5432/online_service",
         legacy_env="ONLINE_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_online.db",
     )
     ONLINE_SERVICE_PORT: int = int(os.getenv("ONLINE_SERVICE_PORT", "8007"))
 
@@ -134,7 +117,6 @@ class Settings:
         "NOTIFICATION_DATABASE_URL",
         "postgresql://user:password@localhost:5432/notification_service",
         legacy_env="NOTIFICATION_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_notification.db",
     )
     NOTIFICATION_SERVICE_PORT: int = int(os.getenv("NOTIFICATION_SERVICE_PORT", "8009"))
 
@@ -142,7 +124,6 @@ class Settings:
         "ACHIEVEMENT_DATABASE_URL",
         "postgresql://user:password@localhost:5432/achievement_service",
         legacy_env="ACHIEVEMENT_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_achievement.db",
     )
     ACHIEVEMENT_SERVICE_PORT: int = int(os.getenv("ACHIEVEMENT_SERVICE_PORT", "8011"))
 
@@ -150,7 +131,6 @@ class Settings:
         "MONITORING_DATABASE_URL",
         "postgresql://user:password@localhost:5432/monitoring_service",
         legacy_env="MONITORING_SERVICE_DATABASE_URL",
-        test_path="sqlite:///./test_monitoring.db",
     )
     MONITORING_SERVICE_PORT: int = int(os.getenv("MONITORING_SERVICE_PORT", "8012"))
 

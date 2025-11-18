@@ -10,7 +10,7 @@ from uuid import UUID
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
-from shared.kafka import publish_event
+from app.events import publish_event
 from .core.config import settings
 
 from . import models, schemas

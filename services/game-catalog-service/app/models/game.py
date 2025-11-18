@@ -124,7 +124,7 @@ class Game(Base):
         nullable=False,
     )
 
-    metadata = Column(JSONB, nullable=True)
+    metadata_json = Column(JSONB, nullable=True)
 
     genres = relationship("Genre", secondary=game_genres, back_populates="games")
     tags = relationship("Tag", secondary=game_tags, back_populates="games")
@@ -133,9 +133,9 @@ class Game(Base):
     achievements = relationship("GameAchievement", back_populates="game")
 
     __table_args__ = (
-        Index("idx_games_title_gin", "title", postgresql_using="gin"),
-        Index("idx_games_developer_gin", "developer", postgresql_using="gin"),
-        Index("idx_games_publisher_gin", "publisher", postgresql_using="gin"),
+        Index("idx_games_title", "title"),
+        Index("idx_games_developer", "developer"),
+        Index("idx_games_publisher", "publisher"),
         Index("idx_games_price_range", "price"),
         Index("idx_games_release_date", "release_date"),
         Index("idx_games_average_rating", "average_rating"),

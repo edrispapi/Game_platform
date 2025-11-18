@@ -31,7 +31,7 @@ class PaymentIntent(Base):
     user_id = Column(String(64), nullable=False, index=True)
     amount = Column(Numeric(12, 2), nullable=False)
     currency = Column(String(3), default="USD", nullable=False)
-    status = Column(String(20), default="requires_payment_method", nullable=False)
+    status = Column(String(20), default="requires_method", nullable=False)
     provider = Column(String(50), nullable=False, default="test-gateway")
     client_secret = Column(String(100), nullable=False)
     expires_at = Column(DateTime(timezone=True), nullable=True)

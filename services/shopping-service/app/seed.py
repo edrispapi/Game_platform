@@ -36,15 +36,29 @@ def seed_shopping(target: int = 100) -> int:
                 extra_metadata={"channel": random.choice(["web", "mobile"])},
             )
 
+            used_game_ids: set[str] = set()
             for item_offset in range(random.randint(1, 3)):
+                game_id = str(random.randint(1, 200))
+                # enforce unique (cart_id, game_id) combos to satisfy constraint
+                attempts = 0
+                while game_id in used_game_ids and attempts < 5:
+                    game_id = str(random.randint(1, 200))
+                    attempts += 1
+                used_game_ids.add(game_id)
+
+                quantity = random.randint(1, 3)
+                unit_price = round(random.uniform(4.99, 59.99), 2)
+                discount_amount = round(random.uniform(0, 10), 2)
+                total_price = round(max(unit_price * quantity - discount_amount, 0.0), 2)
+
                 cart.items.append(
                     models.CartItem(
-                        game_id=str(random.randint(1, 200)),
-                        game_name=f"Sample Game {random.randint(1, 200)}",
-                        quantity=random.randint(1, 3),
-                        unit_price=round(random.uniform(4.99, 59.99), 2),
-                        discount_amount=round(random.uniform(0, 10), 2),
-                        total_price=round(random.uniform(4.99, 59.99), 2),
+                        game_id=game_id,
+                        game_name=f"Sample Game {game_id}",
+                        quantity=quantity,
+                        unit_price=unit_price,
+                        discount_amount=discount_amount,
+                        total_price=total_price,
                     )
                 )
 

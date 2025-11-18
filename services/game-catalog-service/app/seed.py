@@ -89,7 +89,7 @@ async def seed_games(target: int = 100) -> int:
                 total_reviews=random.randint(0, 10000),
                 positive_reviews=random.randint(0, 9000),
                 negative_reviews=random.randint(0, 4000),
-                metadata={
+                metadata_json={
                     "support_email": "support@example.com",
                     "website": f"https://games.example.com/{idx}",
                 },

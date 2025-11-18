@@ -216,8 +216,14 @@ class GameSearchFilters(BaseModel):
     status: Optional[GameStatusEnum] = None
     game_type: Optional[GameTypeEnum] = None
     age_rating: Optional[AgeRatingEnum] = None
-    sort_by: Optional[str] = Field(default="relevance", regex="^(relevance|price|rating|release_date|title)$")
-    sort_order: Optional[str] = Field(default="desc", regex="^(asc|desc)$")
+    sort_by: Optional[str] = Field(
+        default="relevance",
+        pattern="^(relevance|price|rating|release_date|title)$",
+    )
+    sort_order: Optional[str] = Field(
+        default="desc",
+        pattern="^(asc|desc)$",
+    )
 
 class GameSearchResponse(BaseModel):
     games: List[GameResponse]

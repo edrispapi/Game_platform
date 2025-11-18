@@ -22,12 +22,7 @@ def seed_payments(target: int = 100) -> int:
         if missing == 0:
             return 0
 
-        statuses = [
-            "requires_payment_method",
-            "processing",
-            "succeeded",
-            "cancelled",
-        ]
+        statuses = ["requires_method", "processing", "succeeded", "cancelled"]
         for offset in range(missing):
             idx = existing + offset + 1
             intent = models.PaymentIntent(

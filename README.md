@@ -275,3 +275,12 @@ STRIPE_API_KEY=sk_test_...
 For full API docs, each service auto-generates Swagger at `/docs`. Contribute via PRs. If scaling to prod, add SSL, monitoring alerts, and backups.
 
 This setup gives you a modular, extensible Steam clone. Start with Phases 1-2 for a quick prototype! If you need code snippets or diagrams, let me know.
+
+### Production-Ready Roadmap
+- **Stabilize core services**: align schemas/migrations for user, catalog, shopping, purchase, payment; ensure API gateway handles JWT validation and per-route rate limits.
+- **Commerce flow**: wire shopping → purchase → payment with inventory holds, payment provider mock/webhooks, audit logs, and notification hooks.
+- **Notifications & communication**: deliver purchase/payment/achievement events via Notification service (email + push) and implement WebSocket presence/chat through Online + Social services backed by Redis pub/sub.
+- **Metadata & recommendations**: enrich the catalog with full-text or Elasticsearch search, media storage in MinIO, import pipelines, and Recommendation service endpoints for personalized lists.
+- **Event bus & observability**: replace temporary event helpers with Kafka/RabbitMQ, define event schemas, add centralized logging/metrics/tracing, and expose `/metrics` per service.
+- **Security & DX**: centralize auth, introduce RBAC, add CI/CD gates (lint/test/build), per-service OpenAPI docs and runbooks, and Makefile/devcontainer tooling for consistent development.
+- **Testing & QA**: run unit/integration/contract tests in Docker, provide seeded datasets, add load/regression suites, and automate migrations/backups for reliable deployments.

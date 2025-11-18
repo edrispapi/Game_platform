@@ -65,20 +65,6 @@ class WishlistCreate(BaseModel):
     is_public: bool = False
 
 
-class WishlistResponse(BaseModel):
-    id: int
-    uuid: str
-    user_id: str
-    name: str
-    description: Optional[str]
-    is_public: bool
-    items: List[WishlistItemResponse] = []
-    created_at: datetime
-    updated_at: datetime
-
-    model_config = ConfigDict(from_attributes=True)
-
-
 class WishlistItemCreate(BaseModel):
     game_id: str
     game_name: str
@@ -94,6 +80,20 @@ class WishlistItemResponse(WishlistItemCreate):
     notify_on_release: bool
     notify_on_price_drop: bool
     added_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class WishlistResponse(BaseModel):
+    id: int
+    uuid: str
+    user_id: str
+    name: str
+    description: Optional[str]
+    is_public: bool
+    items: List[WishlistItemResponse] = Field(default_factory=list)
+    created_at: datetime
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
