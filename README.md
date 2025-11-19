@@ -38,6 +38,9 @@ Here's a guessed set of essential microservices, covering user management, conte
 8. **Friends & Social Service**  
    - Social graph: Friend requests, chat, groups/clans.  
    - Key features: Graph database for relationships, basic messaging.
+9. **Friends & Chat Service (MongoDB)**  
+   - Handles friend requests, acceptance, and high-volume chat logs (direct + lobby).  
+   - Key features: MongoDB for flexible document storage, JWT-secured APIs, integration with WebSocket lobby chat.
 
 9. **Notification Service**  
    - Push notifications for achievements, sales, friend invites.  
@@ -155,12 +158,18 @@ steam-clone/
 │   │   └── migrations/      # Alembic
 │   ├── game-catalog-service/ # Similar structure
 │   └── ...                  # For all services
-├── shared/                  # Common libs (e.g., auth utils)
+│   ├── friends-chat-service/
+│   │   ├── app/
+│   │   │   ├── main.py
+│   │   │   ├── routes.py
+│   │   │   ├── schemas.py    # Mongo-based models
+│   │   ├── requirements.txt
+│   │   ├── Dockerfile
+│   │   └── .env
 ├── docker-compose.yml       # Local dev stack
-├── kubernetes/              # Prod manifests (optional)
-├── docs/                    # API specs, diagrams
-├── tests/                   # Shared tests
-├── .env.example             # Env vars template
+├── docs/                    # API specs, diagrams (coming soon)
+├── tests/                   # Shared tests (coming soon)
+├── .env.example             # Stack-wide env template
 └── README.md                # Full setup guide
 ```
 
@@ -278,6 +287,8 @@ This setup gives you a modular, extensible Steam clone. Start with Phases 1-2 fo
 
 ### Production-Ready Roadmap
 - **Stabilize core services**: align schemas/migrations for user, catalog, shopping, purchase, payment; ensure API gateway handles JWT validation and per-route rate limits.
+- **Real-time multiplayer lobbies**: the online-service now exposes lobby CRUD endpoints (`/api/v1/online/lobbies`) plus a WebSocket channel at `/ws/lobbies/{id}` backed by Redis Pub/Sub so players can chat, ready-up, and stay in sync across instances.
+- **Friends & chat microservice**: dedicated FastAPI service backed by MongoDB for friend requests, approvals, and direct/lobby chat history. Exposed through the gateway at `/api/v1/friends/**`, secured with JWT, and complements the realtime lobby WebSocket channel.
 - **Commerce flow**: wire shopping → purchase → payment with inventory holds, payment provider mock/webhooks, audit logs, and notification hooks.
 - **Notifications & communication**: deliver purchase/payment/achievement events via Notification service (email + push) and implement WebSocket presence/chat through Online + Social services backed by Redis pub/sub.
 - **Metadata & recommendations**: enrich the catalog with full-text or Elasticsearch search, media storage in MinIO, import pipelines, and Recommendation service endpoints for personalized lists.

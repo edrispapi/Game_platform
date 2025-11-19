@@ -1,15 +1,12 @@
 """
 API Gateway Service
 """
-from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import httpx
 import redis
-import json
 import os
-from typing import Dict, Any
-import time
 
 # Service URLs
 USER_SERVICE_URL = os.getenv("USER_SERVICE_URL", "http://localhost:8001")
@@ -23,6 +20,7 @@ SOCIAL_SERVICE_URL = os.getenv("SOCIAL_SERVICE_URL", "http://localhost:8008")
 NOTIFICATION_SERVICE_URL = os.getenv("NOTIFICATION_SERVICE_URL", "http://localhost:8009")
 RECOMMENDATION_SERVICE_URL = os.getenv("RECOMMENDATION_SERVICE_URL", "http://localhost:8010")
 ACHIEVEMENT_SERVICE_URL = os.getenv("ACHIEVEMENT_SERVICE_URL", "http://localhost:8011")
+FRIENDS_CHAT_SERVICE_URL = os.getenv("FRIENDS_CHAT_SERVICE_URL", "http://localhost:8013")
 
 # Redis connection
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
@@ -59,6 +57,7 @@ SERVICE_ROUTES = {
     "/api/v1/notifications": NOTIFICATION_SERVICE_URL,
     "/api/v1/recommendations": RECOMMENDATION_SERVICE_URL,
     "/api/v1/achievements": ACHIEVEMENT_SERVICE_URL,
+    "/api/v1/friends": FRIENDS_CHAT_SERVICE_URL,
 }
 
 # Rate limiting configuration
@@ -66,7 +65,7 @@ RATE_LIMIT_PER_MINUTE = 60
 
 def get_rate_limit_key(request: Request) -> str:
     """Get rate limiting key based on client IP"""
-    client_ip = request.client.host
+    client_ip = request.client.host if request.client else "unknown"
     return f"rate_limit:{client_ip}"
 
 def check_rate_limit(request: Request) -> bool:
@@ -110,8 +109,22 @@ async def proxy_request(request: Request, service_url: str) -> JSONResponse:
                 timeout=30.0
             )
             
+            # Determine content type
+            content_type = response.headers.get("content-type", "")
+            is_json = content_type.startswith("application/json")
+            
+            # Parse response content
+            if is_json:
+                try:
+                    content = response.json()
+                except Exception:
+                    # Fallback to text if JSON parsing fails
+                    content = response.text
+            else:
+                content = response.text
+            
             return JSONResponse(
-                content=response.json() if response.headers.get("content-type", "").startswith("application/json") else response.text,
+                content=content,
                 status_code=response.status_code,
                 headers=dict(response.headers)
             )
@@ -136,10 +149,13 @@ def root():
 @app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"])
 async def proxy_all_requests(request: Request, path: str):
     """Proxy all requests to appropriate services"""
+    # Normalize path to include leading slash for comparison
+    normalized_path = f"/{path}" if not path.startswith("/") else path
+    
     # Find matching service
     service_url = None
     for route_prefix, url in SERVICE_ROUTES.items():
-        if path.startswith(route_prefix.lstrip("/")):
+        if normalized_path.startswith(route_prefix):
             service_url = url
             break
     
