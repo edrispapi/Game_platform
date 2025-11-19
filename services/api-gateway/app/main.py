@@ -23,6 +23,7 @@ SOCIAL_SERVICE_URL = os.getenv("SOCIAL_SERVICE_URL", "http://localhost:8008")
 NOTIFICATION_SERVICE_URL = os.getenv("NOTIFICATION_SERVICE_URL", "http://localhost:8009")
 RECOMMENDATION_SERVICE_URL = os.getenv("RECOMMENDATION_SERVICE_URL", "http://localhost:8010")
 ACHIEVEMENT_SERVICE_URL = os.getenv("ACHIEVEMENT_SERVICE_URL", "http://localhost:8011")
+FRIENDS_CHAT_SERVICE_URL = os.getenv("FRIENDS_CHAT_SERVICE_URL", "http://localhost:8013")
 
 # Redis connection
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
@@ -59,6 +60,7 @@ SERVICE_ROUTES = {
     "/api/v1/notifications": NOTIFICATION_SERVICE_URL,
     "/api/v1/recommendations": RECOMMENDATION_SERVICE_URL,
     "/api/v1/achievements": ACHIEVEMENT_SERVICE_URL,
+    "/api/v1/friends": FRIENDS_CHAT_SERVICE_URL,
 }
 
 # Rate limiting configuration
